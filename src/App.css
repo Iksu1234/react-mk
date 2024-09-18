@@ -5,11 +5,13 @@
   background-attachment: fixed;
   background-color: #282c34;
   text-shadow: 1px 1px 2px rgb(0, 0, 0);
+
   /*font-size: calc(10px + 2vmin);*/
 }
 .App-header {
   background-color: #022c7f;
   display: flex;
+  width: 100vw;
   height: fit-content;
   flex-direction: column;
   justify-content: center;
