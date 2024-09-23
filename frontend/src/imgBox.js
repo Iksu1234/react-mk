@@ -1,8 +1,29 @@
-import React from "react";
-import jsonData from "./images.json";
+import React, { useState, useEffect } from "react";
+//import jsonData from "./images.json";
 import Zoom from "react-medium-image-zoom";
+import axios from "axios";
 
 function ImgBox() {
+  /*
+  let jsonData = { images: [] };
+  axios
+    .get("http://localhost:3001/images")
+    .then((response) => (jsonData = console.log(response.data)));*/
+  const [jsonData, setJsonData] = useState({ images: [] });
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get("http://localhost:3001/images");
+        setJsonData(response.data);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
   return (
     <div className="pageWrapper">
       {jsonData.images.map((image, index) => (
