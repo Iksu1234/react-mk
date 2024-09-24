@@ -10,6 +10,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 const corsOptions = {
   origin: "*",
+  methods: "GET,POST",
   credentials: true,
   optionsSuccesStatus: 200,
 };

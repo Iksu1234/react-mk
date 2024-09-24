@@ -5,6 +5,7 @@ const { type } = require("os");
 const path = require("path");
 const router = express.Router();
 
+// GET images from images.json
 router.get("/images", (req, res) => {
   const filePath = path.join(__dirname, "../images.json");
   fs.readFile(filePath, "utf8", (err, data) => {
@@ -18,6 +19,7 @@ router.get("/images", (req, res) => {
   });
 });
 
+// GET ratings from rating.json
 router.get("/ratings", (req, res) => {
   const filePath = path.join(__dirname, "../rating.json");
   fs.readFile(filePath, "utf8", (err, data) => {
@@ -31,9 +33,10 @@ router.get("/ratings", (req, res) => {
   });
 });
 
+// POST ratings to rating.json
 router.post("/ratings", (req, res) => {
   const filePath = path.join(__dirname, "../rating.json");
-  const newRate = req.body; // Access the request body
+  const newRate = req.body;
 
   fs.readFile(filePath, "utf8", (err, data) => {
     if (err) {
@@ -49,12 +52,27 @@ router.post("/ratings", (req, res) => {
 
     fs.writeFile(filePath, JSON.stringify(oldRate), "utf8", (err) => {
       if (err) {
-        console.error("Error writing to rating.json:", err);
+        console.error("Error writing file", err);
         res.status(500).send("Internal Server Error");
         return;
       }
       res.status(201).send("Rating added successfully");
     });
+  });
+});
+// POST new images to images.json
+router.post("/images", (req, res) => {
+  const filePath = path.join(__dirname, "../images.json");
+  const newImages = req.body;
+  console.log(newImages);
+
+  fs.writeFile(filePath, JSON.stringify(newImages), "utf8", (err) => {
+    if (err) {
+      console.error("Error writing file", err);
+      res.status(500).send("Internal Server Error");
+      return;
+    }
+    res.status(201).send("New image file created");
   });
 });
 
