@@ -1,12 +1,28 @@
-const { json } = require("body-parser");
 const express = require("express");
 const fs = require("fs");
-const { type } = require("os");
 const path = require("path");
 const router = express.Router();
 
+const allowedOrigin = "https://react-mk-front.azurewebsites.net";
+
+// Middleware to check the origin of incoming requests
+const checkOrigin = (req, res, next) => {
+  const origin = req.get("Origin");
+  if (origin === allowedOrigin) {
+    console.log("Origin allowed:", origin);
+    next();
+  } else {
+    console.log("Origin not allowed:", origin);
+    res.status(403).send("Forbidden: Origin not allowed");
+  }
+};
+
+// Apply the origin check middleware to all routes
+router.use(checkOrigin);
+
 // GET images from images.json
 router.get("/images", (req, res) => {
+  console.log("GET /images");
   const filePath = path.join(__dirname, "../images.json");
   fs.readFile(filePath, "utf8", (err, data) => {
     if (err) {
@@ -18,7 +34,6 @@ router.get("/images", (req, res) => {
     res.json(images);
   });
 });
-
 // GET ratings from rating.json
 router.get("/ratings", (req, res) => {
   const filePath = path.join(__dirname, "../rating.json");
@@ -32,9 +47,8 @@ router.get("/ratings", (req, res) => {
     res.json(ratings);
   });
 });
-
-// POST ratings to rating.json
-router.post("/ratings", (req, res) => {
+// modify ratings to rating.json
+router.patch("/ratings", (req, res) => {
   const filePath = path.join(__dirname, "../rating.json");
   const newRate = req.body;
 
@@ -56,15 +70,14 @@ router.post("/ratings", (req, res) => {
         res.status(500).send("Internal Server Error");
         return;
       }
-      res.status(201).send("Rating added successfully");
+      res.status(200).send("Rating added successfully");
     });
   });
 });
 // POST new images to images.json
-router.post("/images", (req, res) => {
+router.put("/images", (req, res) => {
   const filePath = path.join(__dirname, "../images.json");
   const newImages = req.body;
-  console.log(newImages);
 
   fs.writeFile(filePath, JSON.stringify(newImages), "utf8", (err) => {
     if (err) {
@@ -72,7 +85,19 @@ router.post("/images", (req, res) => {
       res.status(500).send("Internal Server Error");
       return;
     }
-    res.status(201).send("New image file created");
+    res.status(200).send("New image file created");
+  });
+});
+// DELETE ratings from rating.json
+router.delete("/ratings", (req, res) => {
+  const filePath = path.join(__dirname, "../rating.json");
+  fs.writeFile(filePath, "[[], [], []]", "utf8", (err) => {
+    if (err) {
+      console.error("Error writing file", err);
+      res.status(500).send("Internal Server Error");
+      return;
+    }
+    res.status(200).send("Deleted successfully");
   });
 });
 

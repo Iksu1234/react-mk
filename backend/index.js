@@ -9,16 +9,15 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
 const corsOptions = {
-  origin: "*",
-  methods: "GET,POST",
-  credentials: true,
-  optionsSuccesStatus: 200,
+  origin: "https://react-mk-front.azurewebsites.net",
+  methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+  optionsSuccessStatus: 200,
 };
 
 app.use(cors(corsOptions));
 app.use("/", router);
 
-const port = 3001;
+const port = process.env.PORT || 3001;
 const server = app.listen(port, () => {
-  console.log(`Servers is running on port ${port}`);
+  console.log(`CORS-enabled server listening on port ${port}`);
 });

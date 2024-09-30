@@ -8,7 +8,9 @@ function ImgBox() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get("http://localhost:3001/images");
+        const response = await axios.get(
+          "http://react-mk-backend.azurewebsites.net/images"
+        );
         setJsonData(response.data);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -20,12 +22,12 @@ function ImgBox() {
   return (
     <div className="pageWrapper">
       {jsonData.images.map((image, index) => (
-        <div>
+        <div key={`d${index}`}>
           <p className="imageText">{`${image.desc}`}</p>
-          <div className="imageWrapper">
-            <div key={index} className="img-box">
+          <div className="imageWrapper" key={`w${index}`}>
+            <div className="img-box" key={`b${index}`}>
               {image.imageLinks.map((link, linkIndex) => (
-                <Zoom>
+                <Zoom key={`z${linkIndex}`}>
                   <img
                     key={linkIndex}
                     src={link.imageLink}
@@ -36,6 +38,7 @@ function ImgBox() {
             </div>
           </div>
           <input
+            key={`r${index}`}
             id={`r${index}`}
             type="number"
             min={1}
@@ -64,12 +67,16 @@ function ImgBox() {
           ratings.push(rating);
         }
       }
-      axios.post("/ratings", ratings, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-      console.log(ratings);
+      axios.patch(
+        "http://react-mk-backend.azurewebsites.net/ratings",
+        ratings,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      alert("Ratings sent successfully");
     } catch (error) {
       console.error("Error sending data:", error);
     }

@@ -7,9 +7,9 @@ function App() {
       <header className="App-header">
         <h2 className="header-text">EKMK maalauskisa</h2>
       </header>
-      <body className="App-body">
+      <div className="App-body">
         <ImgBox />
-      </body>
+      </div>
     </div>
   );
 }
